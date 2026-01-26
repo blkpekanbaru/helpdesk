@@ -22,9 +22,15 @@ class AuthController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->route('dashAdmin')
-                ->with('success', 'Login berhasil');
+            if (Auth::user()->role === 'admin') {
+                return redirect()->route('dashAdmin')
+                    ->with('success', 'Login sebagai Admin');
+            }
+
+            return redirect()->route('dashUser')
+                ->with('success', 'Login sebagai User');
         }
+
 
         return back()->withErrors([
             'username' => 'Username atau password salah',

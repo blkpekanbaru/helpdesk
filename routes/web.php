@@ -24,17 +24,21 @@ Route::get('/', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'authentication'])->name('AuthLogin');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-//dashboard
-Route::get('/admin-dashboard', [AdminController::class, 'index'])->name('dashAdmin');
+Route::middleware(['auth', 'role:admin'])->group(function () {
 
-//pekerjaan
-Route::get('/admin-pekerjaan', [AdminController::class, 'pekerjaan'])->name('ShowPekerjaan');
+    Route::get('/admin-dashboard', [AdminController::class, 'index'])
+        ->name('dashAdmin');
 
-//Agenda pelatihan
-Route::get('/admin-pelatihan', [AdminController::class, 'pelatihan'])->name('ShowPelatihan');
+    Route::get('/admin-pekerjaan', [AdminController::class, 'pekerjaan'])
+        ->name('ShowPekerjaan');
 
-//kalendar
-// Route::get('/admin-kalendar', [AdminController::class, 'kalendar'])->name('Kalendar');
+    Route::get('/admin-pelatihan', [AdminController::class, 'pelatihan'])
+        ->name('ShowPelatihan');
 
-//laporan
-Route::get('/admin-laporan', [AdminController::class, 'laporan'])->name('Laporan');
+    Route::get('/admin-laporan', [AdminController::class, 'laporan'])
+        ->name('Laporan');
+});
+
+Route::get('/user-dashboard', function () {
+    return view('user.dashboard');
+})->name('dashUser')->middleware('auth');

@@ -1,3 +1,13 @@
- <span class="font-weight-bold mb-2"> {{ auth()->user()->username }}</span>
- <span class="text-secondary text-small"> {{ auth()->user()->role }}</span>
+<body>
+    @include('layout.style')
 
+    <aside>
+        {{ auth()->user()->username }}
+    </aside>
+
+    <main>
+        @yield('content')
+    </main>
+
+    @include('layout.script')
+</body>
