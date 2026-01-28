@@ -12,4 +12,7 @@
 <!-- Layout styles -->
 <link rel="stylesheet" href="{{ asset('template/dist/assets/css/style.css')}}">
 <!-- End layout styles -->
-<link rel="shortcut icon" href="{{ asset('template/dist/assets/images/favicon.png')}}" />
+<link rel="shortcut icon" href="{{ asset('template/dist/assets/images/logo_satpel_mini.png')}}" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+

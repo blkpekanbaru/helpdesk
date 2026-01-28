@@ -5,7 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Purple Admin</title>
+    <title>Helpdesk Admin</title>
     <!-- plugins:css -->
     @include('layout.style')
 </head>
@@ -17,11 +17,14 @@
                 <div class="row flex-grow">
                     <div class="col-lg-4 mx-auto">
                         <div class="auth-form-light text-left p-5">
-                            <div class="brand-logo">
-                                <img src="{{ asset('template/dist/assets/images/logo.svg')}}">
+                            <div class="brand-logo text-center mb-3">
+                                <div class="mb-3">
+                                    <img src="{{ asset('template/dist/assets/images/logo_satpel_mini.png')}}" width="40%" alt="Logo">
+                                </div>
+                                <h4>Helpdesk BLK</h4>
+                                <h6 class="font-weight-light">Login Untuk Melanjutkan</h6>
                             </div>
-                            <h4>Helpdesk BLK</h4>
-                            <h6 class="font-weight-light">Sign in to continue</h6>
+
                             <form class="pt-3" action="{{ route('AuthLogin') }}" method="post">
                                 @csrf
                                 <div class="form-group">
@@ -49,7 +52,7 @@
                             <div class="modal-content bg-white text-dark">
 
                                 <div class="modal-header">
-                                    <h5 class="modal-title">Forgot Password</h5>
+                                    <h5 class="modal-title"><i class="mdi mdi-key-variant"></i> Forgot Password</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                 </div>
 

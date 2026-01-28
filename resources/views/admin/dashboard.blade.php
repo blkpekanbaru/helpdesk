@@ -5,18 +5,43 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Purple Admin</title>
+    <title>Helpdesk Admin</title>
     <!-- plugins:css -->
     @include('layout.style')
 </head>
+<style>
+    .logo-main {
+        max-height: 80px;
+        /* sebelumnya 48px */
+        transform: scale(1.8);
+        width: auto;
+        object-fit: contain;
+    }
+
+
+    .logo-mini {
+        max-height: 36px;
+        width: auto;
+        object-fit: contain;
+    }
+</style>
 
 <body>
     <div class="container-scroller">
         <!-- partial:partials/_navbar.html -->
         <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
-            <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-start">
-                <a class="navbar-brand brand-logo" href="index.html"><img src="assets/images/logo.svg" alt="logo" /></a>
-                <a class="navbar-brand brand-logo-mini" href="index.html"><img src="assets/images/logo-mini.svg" alt="logo" /></a>
+            <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
+                <a class="navbar-brand brand-logo" href="#">
+                    <img src="{{ asset('template/dist/assets/images/logo-satpel.png') }}"
+                        class="logo-main"
+                        alt="logo">
+                </a>
+
+                <a class="navbar-brand brand-logo-mini" href="#">
+                    <img src="{{ asset('template/dist/assets/images/logo_satpel_mini.png') }}"
+                        class="logo-mini"
+                        alt="logo">
+                </a>
             </div>
             <div class="navbar-menu-wrapper d-flex align-items-stretch">
                 <button class="navbar-toggler navbar-toggler align-self-center" type="button" data-toggle="minimize">
@@ -44,16 +69,7 @@
                             </div>
                         </a>
                         <div class="dropdown-menu navbar-dropdown" aria-labelledby="profileDropdown">
-                            <a class="dropdown-item" href="#">
-                                <i class="mdi mdi-cached me-2 text-success"></i> Activity Log </a>
-                            <div class="dropdown-divider"></div>
-                            <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
-                                @csrf
-                            </form>
-                            <a class="dropdown-item" href="#"
-                                onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
-                                <i class="mdi mdi-logout me-2 text-primary"></i> Signout
-                            </a>
+                            @include('layout.user')
                         </div>
                     </li>
                 </ul>
@@ -75,7 +91,8 @@
                                 <!--change to offline or busy as needed-->
                             </div>
                             <div class="nav-profile-text d-flex flex-column">
-                                @include('layout.user')
+                                <span class="font-weight-bold mb-2">{{ auth()->user()->username }}</span>
+                                <span class="text-secondary text-small">{{ auth()->user()->role }}</span>
                             </div>
                             <i class="mdi mdi-bookmark-check text-success nav-profile-badge"></i>
                         </a>
@@ -104,63 +121,47 @@
                         <div class="col-12 grid-margin">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Recent Tickets</h4>
+                                    <h4 class="card-title"><i class="mdi mdi-alert-octagon"></i> Pengaduan</h4>
                                     <div class="table-responsive">
-                                        <table class="table">
+                                        <table class="table table-bordered table-striped" id="datatablePengaduan">
                                             <thead>
                                                 <tr>
-                                                    <th> Assignee </th>
-                                                    <th> Subject </th>
-                                                    <th> Status </th>
-                                                    <th> Last Update </th>
-                                                    <th> Tracking ID </th>
+                                                    <th class="text-center"> No </th>
+                                                    <th> Nama Pelapor </th>
+                                                    <th> Lokasi </th>
+                                                    <th> Ruangan </th>
+                                                    <th> Fasilitas </th>
+                                                    <th class="text-center"> Foto </th>
+                                                    <th> Deskripsi </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                @foreach ($pengaduan as $index => $p)
                                                 <tr>
+                                                    <td class="text-center">{{ $index + 1 }}</td>
+                                                    <td>{{ $p->nama }}</td>
                                                     <td>
-                                                        <img src="assets/images/faces/face1.jpg" class="me-2" alt="image"> David Grey
+                                                        @if ($p->gedung == "ws")
+                                                        Workshop
+                                                        @elseif ($p->gedung == "utama")
+                                                        Gedung Utama
+                                                        @endif
                                                     </td>
-                                                    <td> Fund is not recieved </td>
-                                                    <td>
-                                                        <label class="badge badge-gradient-success">DONE</label>
+                                                    <td>{{ $p->ruangan }}</td>
+                                                    <td>{{ $p->fasilitas ?? '-' }}</td>
+                                                    <td class="text-center">
+                                                        @if ($p->foto)
+                                                        <a href="{{ asset('storage/uploads/' . $p->foto) }}" target="_blank">
+                                                            <img src="{{ asset('storage/uploads/' . $p->foto) }}"
+                                                                style="width:80px;height:80px;object-fit:cover;border-radius:4px;">
+                                                        </a>
+                                                        @else
+                                                        -
+                                                        @endif
                                                     </td>
-                                                    <td> Dec 5, 2017 </td>
-                                                    <td> WD-12345 </td>
+                                                    <td>{{ $p->deskripsi ?? '-' }}</td>
                                                 </tr>
-                                                <tr>
-                                                    <td>
-                                                        <img src="assets/images/faces/face2.jpg" class="me-2" alt="image"> Stella Johnson
-                                                    </td>
-                                                    <td> High loading time </td>
-                                                    <td>
-                                                        <label class="badge badge-gradient-warning">PROGRESS</label>
-                                                    </td>
-                                                    <td> Dec 12, 2017 </td>
-                                                    <td> WD-12346 </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <img src="assets/images/faces/face3.jpg" class="me-2" alt="image"> Marina Michel
-                                                    </td>
-                                                    <td> Website down for one week </td>
-                                                    <td>
-                                                        <label class="badge badge-gradient-info">ON HOLD</label>
-                                                    </td>
-                                                    <td> Dec 16, 2017 </td>
-                                                    <td> WD-12347 </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        <img src="assets/images/faces/face4.jpg" class="me-2" alt="image"> John Doe
-                                                    </td>
-                                                    <td> Loosing control on server </td>
-                                                    <td>
-                                                        <label class="badge badge-gradient-danger">REJECTED</label>
-                                                    </td>
-                                                    <td> Dec 3, 2017 </td>
-                                                    <td> WD-12348 </td>
-                                                </tr>
+                                                @endforeach
                                             </tbody>
                                         </table>
                                     </div>
@@ -169,81 +170,41 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-md-7 grid-margin stretch-card">
+                        <div class="col-md-12 grid-margin stretch-card">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Project Status</h4>
+                                    <h4 class="card-title"><i class="mdi mdi-clock-time-eight-outline"></i> Project Berjalan </h4>
                                     <div class="table-responsive">
-                                        <table class="table">
+                                        <table class="table table-bordered table-striped" id="datatableProyek">
                                             <thead>
                                                 <tr>
-                                                    <th> # </th>
-                                                    <th> Name </th>
-                                                    <th> Due Date </th>
-                                                    <th> Progress </th>
+                                                    <th> No </th>
+                                                    <th> Nama proyek </th>
+                                                    <th> Deskripsi </th>
+                                                    <th> Status </th>
+                                                    <th> PIC </th>
+                                                    <th> Tanggal Mulai</th>
+                                                    <th> Deadline </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
+                                                @foreach ($proyek as $index => $p)
                                                 <tr>
-                                                    <td> 1 </td>
-                                                    <td> Herman Beck </td>
-                                                    <td> May 15, 2015 </td>
+                                                    <td class="text-center">{{ $index + 1 }}</td>
+                                                    <td>{{ $p->nama_proyek }}</td>
+                                                    <td>{{ $p->deskripsi }}</td>
                                                     <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-gradient-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                                        </div>
+                                                        @if ($p->status == 0)
+                                                        <span class="badge badge-gradient-danger">Belum dikerjakan</span>
+                                                        @elseif($p->status == 1)
+                                                        <span class="badge badge-gradient-warning">Progress</span>
+                                                        @endif
                                                     </td>
+                                                    <td>{{ $p->teknisi?->nama_teknisi ?? '-' }}</td>
+                                                    <td>{{ $p->tgl_mulai }}</td>
+                                                    <td>{{ $p->deadline ?? '-' }}</td>
                                                 </tr>
-                                                <tr>
-                                                    <td> 2 </td>
-                                                    <td> Messsy Adam </td>
-                                                    <td> Jul 01, 2015 </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-gradient-danger" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> 3 </td>
-                                                    <td> John Richards </td>
-                                                    <td> Apr 12, 2015 </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-gradient-warning" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> 4 </td>
-                                                    <td> Peter Meggik </td>
-                                                    <td> May 15, 2015 </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-gradient-primary" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> 5 </td>
-                                                    <td> Edward </td>
-                                                    <td> May 03, 2015 </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-gradient-danger" role="progressbar" style="width: 35%" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> 5 </td>
-                                                    <td> Ronald </td>
-                                                    <td> Jun 05, 2015 </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-gradient-info" role="progressbar" style="width: 65%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                @endforeach
                                             </tbody>
                                         </table>
                                     </div>
@@ -269,7 +230,38 @@
     <!-- container-scroller -->
     <!-- plugins:js -->
     @include('layout.script')
-    <!-- End custom js for this page -->
+    <script>
+        $(document).ready(function() {
+
+            const tableIds = ['#datatablePengaduan', '#datatableProyek'];
+
+            tableIds.forEach(function(id) {
+                $(id).DataTable({
+                    responsive: true,
+                    pageLength: 10,
+                    lengthMenu: [5, 10, 25, 50],
+                    language: {
+                        search: "Cari:",
+                        lengthMenu: "Tampilkan _MENU_ data",
+                        info: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
+                        infoEmpty: "Data tidak tersedia",
+                        zeroRecords: "Data tidak ditemukan",
+                        paginate: {
+                            first: "Awal",
+                            last: "Akhir",
+                            next: "›",
+                            previous: "‹"
+                        }
+                    },
+                    columnDefs: [{
+                        orderable: false,
+                        targets: -1 // kolom terakhir
+                    }]
+                });
+            });
+
+        });
+    </script>
 </body>
 
 </html>

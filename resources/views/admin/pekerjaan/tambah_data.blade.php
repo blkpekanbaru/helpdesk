@@ -106,8 +106,8 @@
                     <div class="page-header">
                         <h3 class="page-title">
                             <span class="page-title-icon bg-gradient-primary text-white me-2">
-                                <i class="mdi mdi-file-check-outline"></i>
-                            </span> Laporan
+                                <i class="mdi mdi-plus"></i>
+                            </span> Tambah Proyek
                         </h3>
                         <nav aria-label="breadcrumb">
                             <ul class="breadcrumb">
@@ -121,99 +121,37 @@
                         <div class="col-6 grid-margin">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Filter Laporan</h4>
-                                    <div class="mb-3">
-                                        <label for="tgl_mulai" class="mb-2">Mulai</label>
-                                        <input type="date" id="tgl_mulai" name="tgl_selesai" class="form-control">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="tgl_akhir" class="mb-2">Akhir</label>
-                                        <input type="date" id="tgl_akhir" name="tgl_akhir" class="form-control">
-                                    </div>
-                                    <button class="btn btn-sm btn-primary"><i class="mdi mdi-eye-outline"></i> Tampilkan</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-7 grid-margin stretch-card">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="card-title">Project Status</h4>
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th> # </th>
-                                                    <th> Name </th>
-                                                    <th> Due Date </th>
-                                                    <th> Progress </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td> 1 </td>
-                                                    <td> Herman Beck </td>
-                                                    <td> May 15, 2015 </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-gradient-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> 2 </td>
-                                                    <td> Messsy Adam </td>
-                                                    <td> Jul 01, 2015 </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-gradient-danger" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> 3 </td>
-                                                    <td> John Richards </td>
-                                                    <td> Apr 12, 2015 </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-gradient-warning" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> 4 </td>
-                                                    <td> Peter Meggik </td>
-                                                    <td> May 15, 2015 </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-gradient-primary" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> 5 </td>
-                                                    <td> Edward </td>
-                                                    <td> May 03, 2015 </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-gradient-danger" role="progressbar" style="width: 35%" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> 5 </td>
-                                                    <td> Ronald </td>
-                                                    <td> Jun 05, 2015 </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-gradient-info" role="progressbar" style="width: 65%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                    <form action="{{route('storePekerjaan')}}" method="post">
+                                        @csrf
+                                        <div class="mb-3">
+                                            <label for="nama_proyek" class="mb-2">Nama Proyek</label>
+                                            <input type="text" id="nama_proyek" name="nama_proyek" class="form-control">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="deskripsi" class="mb-2">Deskripsi</label>
+                                            <textarea id="deskripsi" name="deskripsi" class="form-control"></textarea>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="pic" class="mb-2">PIC</label>
+                                            <select id="pic" name="pic" required class="form-select">
+                                                <option value="">-- Pilih PIC --</option>
+                                                @foreach ($teknisi as $t)
+                                                <option value="{{ $t->id }}">
+                                                    {{ $t->nama_teknisi }}
+                                                </option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="tgl_mulai" class="mb-2">Tanggal Mulai</label>
+                                            <input type="date" id="tgl_mulai" name="tgl_mulai" class="form-control">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="deadline" class="mb-2">Deadline</label>
+                                            <input type="date" id="deadline" name="deadline" class="form-control">
+                                        </div>
+                                        <button class="btn btn-sm btn-primary"><i class="mdi mdi-content-save-check-outline"></i> Simpan</button>
+                                    </form>
                                 </div>
                             </div>
                         </div>
