@@ -59,6 +59,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     Route::get('/admin-laporan', [AdminController::class, 'laporan'])
         ->name('Laporan');
+
+    Route::get('/laporan', [AdminController::class, 'laporan'])->name('laporan');
 });
 
 Route::get('/user-dashboard', function () {

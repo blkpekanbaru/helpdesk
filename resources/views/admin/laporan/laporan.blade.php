@@ -118,105 +118,96 @@
                         </nav>
                     </div>
                     <div class="row">
-                        <div class="col-6 grid-margin">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="card-title">Filter Laporan</h4>
-                                    <div class="mb-3">
-                                        <label for="tgl_mulai" class="mb-2">Mulai</label>
-                                        <input type="date" id="tgl_mulai" name="tgl_selesai" class="form-control">
-                                    </div>
-                                    <div class="mb-3">
-                                        <label for="tgl_akhir" class="mb-2">Akhir</label>
-                                        <input type="date" id="tgl_akhir" name="tgl_akhir" class="form-control">
-                                    </div>
-                                    <button class="btn btn-sm btn-primary"><i class="mdi mdi-eye-outline"></i> Tampilkan</button>
-                                </div>
-                            </div>
+    <div class="col-md-6 grid-margin">
+        <div class="card">
+            <form action="{{ route('laporan') }}" method="GET">
+                <div class="card-body">
+                    <h4 class="card-title mb-4">Filter Laporan</h4>
+
+                    <!-- Tanggal -->
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Tanggal Mulai</label>
+                            <input type="date"
+                                name="tgl_mulai"
+                                class="form-control"
+                                value="{{ request('tgl_mulai') }}">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Deadline</label>
+                            <input type="date"
+                                name="deadline"
+                                class="form-control"
+                                value="{{ request('deadline') }}">
                         </div>
                     </div>
+
+                    <!-- Button -->
+                    <div class="d-flex align-items-center gap-2 mt-3">
+                        <button type="submit" class="btn btn-sm btn-primary">
+                            <i class="mdi mdi-eye-outline"></i> Tampilkan
+                        </button>
+
+                        @if(request()->filled('tgl_mulai') || request()->filled('deadline'))
+                            <a href="{{ route('laporan') }}" class="btn btn-sm btn-outline-secondary">
+                                Reset
+                            </a>
+                        @endif
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
                     <div class="row">
-                        <div class="col-md-7 grid-margin stretch-card">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="card-title">Project Status</h4>
-                                    <div class="table-responsive">
-                                        <table class="table">
-                                            <thead>
-                                                <tr>
-                                                    <th> # </th>
-                                                    <th> Name </th>
-                                                    <th> Due Date </th>
-                                                    <th> Progress </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td> 1 </td>
-                                                    <td> Herman Beck </td>
-                                                    <td> May 15, 2015 </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-gradient-success" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> 2 </td>
-                                                    <td> Messsy Adam </td>
-                                                    <td> Jul 01, 2015 </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-gradient-danger" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> 3 </td>
-                                                    <td> John Richards </td>
-                                                    <td> Apr 12, 2015 </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-gradient-warning" role="progressbar" style="width: 90%" aria-valuenow="90" aria-valuemin="0" aria-valuemax="100"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> 4 </td>
-                                                    <td> Peter Meggik </td>
-                                                    <td> May 15, 2015 </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-gradient-primary" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> 5 </td>
-                                                    <td> Edward </td>
-                                                    <td> May 03, 2015 </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-gradient-danger" role="progressbar" style="width: 35%" aria-valuenow="35" aria-valuemin="0" aria-valuemax="100"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td> 5 </td>
-                                                    <td> Ronald </td>
-                                                    <td> Jun 05, 2015 </td>
-                                                    <td>
-                                                        <div class="progress">
-                                                            <div class="progress-bar bg-gradient-info" role="progressbar" style="width: 65%" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
+                    <div class="col-md-12 grid-margin stretch-card">
+                        <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Project Status</h4>
+
+                            <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="thead-light">
+                                <tr>
+                                    <th>No</th>
+                                    <th>Nama Proyek</th>
+                                    <th>Deskripsi</th>
+                                    <th>Tanggal Mulai</th>
+                                    <th>Deadline</th>
+                                    <th>Progres</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach ($laporan as $i => $row)
+                                    <tr>
+                                        <td>{{ $i + 1 }}</td>
+                                        <td>{{ $row->nama_proyek }}</td>
+                                        <td>{{ $row->deskripsi }}</td>
+                                        <td>{{ $row->tgl_mulai }}</td>
+                                        <td>{{ $row->deadline }}</td>
+                                        <td>
+                                            <span class="badge badge-info">
+                                                {{ $row->status }}
+                                            </span>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                    @if ($laporan->isEmpty())
+                                    <tr>
+                                        <td colspan="6" class="text-center text-muted">
+                                            Data tidak ditemukan
+                                        </td>
+                                    </tr>
+                                    @endif
+                                </tbody>
+                            </table>
                             </div>
                         </div>
+                        </div>
+                    </div>
                     </div>
                 </div>
                 <!-- content-wrapper ends -->

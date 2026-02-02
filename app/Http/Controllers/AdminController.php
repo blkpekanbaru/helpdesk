@@ -15,7 +15,7 @@ class AdminController extends Controller
         $proyek = Proyek::with('teknisi')
             ->whereIn('status', [0, 1])
             ->get();
-        return view('admin.dashboard', compact('pengaduan','proyek'));
+        return view('admin.dashboard', compact('pengaduan', 'proyek'));
     }
 
     public function pekerjaan()
@@ -28,7 +28,7 @@ class AdminController extends Controller
         $history = Proyek::with('teknisi')
             ->whereNotIn('status', [0, 1])
             ->get();
-        return view('admin.pekerjaan.tampil_data', compact('teknisi', 'proyek','history'));
+        return view('admin.pekerjaan.tampil_data', compact('teknisi', 'proyek', 'history'));
     }
 
     public function tambahPekerjaan()
@@ -126,8 +126,28 @@ class AdminController extends Controller
         return view('admin.pelatihan.tampil_data');
     }
 
-    public function laporan()
+
+    // laporan
+    public function laporan(Request $request)
     {
-        return view('admin.laporan.laporan');
+        $query = Proyek::select(
+            'nama_proyek',
+            'deskripsi',
+            'status',
+            'tgl_mulai',
+            'deadline'
+        );
+
+        if ($request->filled('tgl_mulai')) {
+            $query->whereDate('tgl_mulai', $request->tgl_mulai);
+        }
+
+        if ($request->filled('deadline')) {
+            $query->whereDate('deadline', $request->deadline);
+        }
+
+        $laporan = $query->get();
+
+        return view('admin.laporan.laporan', compact('laporan'));
     }
 }
