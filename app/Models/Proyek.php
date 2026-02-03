@@ -19,6 +19,6 @@ class Proyek extends Model
 
     public function teknisi()
     {
-        return $this->belongsTo(Teknisi::class, 'pic');
+        return $this->belongsTo(Teknisi::class, 'pic', 'id');
     }
 }

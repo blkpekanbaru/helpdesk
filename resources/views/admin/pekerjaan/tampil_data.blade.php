@@ -129,6 +129,17 @@
                         });
                     </script>
                     @endif
+                    @if (session('success_kirim_pesan'))
+                    <script>
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Berhasil!",
+                            text: "Pesan Berhasil terkirim!",
+                            showConfirmButton: true,
+                        });
+                    </script>
+                    @endif
                     @if (session('success_update_proyek'))
                     <script>
                         Swal.fire({
@@ -195,6 +206,11 @@
                                                             <i class="mdi mdi-pencil"></i> Edit
                                                         </a>
 
+
+                                                        <a href="{{ route('TampilPesan', $p->teknisi->id) }}" class="btn btn-success btn-sm">
+                                                            <i class="mdi mdi-chat"></i> Pesan
+                                                        </a>
+
                                                         <!-- Tombol Hapus -->
                                                         <form action="{{ route('destroyPekerjaan', $p->id) }}" method="POST"
                                                             class="delete-form d-inline">
@@ -249,6 +265,7 @@
                         });
                     </script>
                     @endif
+
                     <div class="row">
                         <div class="col-md-8 grid-margin stretch-card">
                             <div class="card">
@@ -456,36 +473,39 @@
             const inputHp = document.getElementById('no_hp');
             const inputTugas = document.getElementById('tugas');
 
-            document.querySelectorAll('.btn-edit-teknisi').forEach(btn => {
-                btn.addEventListener('click', function() {
+            // ✅ DELEGATED EVENT (AMAN UNTUK DATATABLES)
+            document.addEventListener('click', function(e) {
+                const btn = e.target.closest('.btn-edit-teknisi');
+                if (!btn) return;
 
-                    modalTitle.innerText = 'Edit Teknisi';
+                modalTitle.innerText = 'Edit Teknisi';
 
-                    form.action = `/teknisi/${this.dataset.id}`;
-                    document.getElementById('formMethod').value = 'PUT';
+                form.action = `/teknisi/${btn.dataset.id}`;
+                document.getElementById('formMethod').value = 'PUT';
 
-                    inputId.value = this.dataset.id;
-                    inputNama.value = this.dataset.nama;
-                    inputHp.value = this.dataset.hp;
-                    inputTugas.value = this.dataset.tugas;
+                inputId.value = btn.dataset.id;
+                inputNama.value = btn.dataset.nama;
+                inputHp.value = btn.dataset.hp;
+                inputTugas.value = btn.dataset.tugas;
+            });
+
+            // Reset modal → mode TAMBAH
+            document.getElementById('modalTambahTeknisi')
+                .addEventListener('hidden.bs.modal', function() {
+
+                    modalTitle.innerText = 'Tambah Teknisi';
+
+                    form.action = "{{ route('storeTeknisi') }}";
+                    document.getElementById('formMethod').value = 'POST';
+
+                    inputId.value = '';
+                    inputNama.value = '';
+                    inputHp.value = '';
+                    inputTugas.value = '';
                 });
-            });
-
-            // Reset modal saat dibuka untuk tambah data
-            document.getElementById('modalTambahTeknisi').addEventListener('hidden.bs.modal', function() {
-                modalTitle.innerText = 'Tambah Teknisi';
-
-                form.action = "{{ route('storeTeknisi') }}";
-                document.getElementById('formMethod').value = 'POST';
-
-                inputId.value = '';
-                inputNama.value = '';
-                inputHp.value = '';
-                inputTugas.value = '';
-            });
-
         });
     </script>
+
     <script>
         // saat tombol delete diklik
         document.querySelectorAll('.delete-form').forEach(form => {
@@ -509,6 +529,7 @@
             });
         });
     </script>
+
 
     <!-- End custom js for this page -->
 </body>

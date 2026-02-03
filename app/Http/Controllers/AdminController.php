@@ -20,7 +20,7 @@ class AdminController extends Controller
 
     public function pekerjaan()
     {
-        $teknisi = Teknisi::all();
+        $teknisi = Teknisi::with('proyek')->get();
         $proyek = Proyek::with('teknisi')
             ->whereIn('status', [0, 1])
             ->get();
@@ -130,24 +130,67 @@ class AdminController extends Controller
     // laporan
     public function laporan(Request $request)
     {
-        $query = Proyek::select(
-            'nama_proyek',
-            'deskripsi',
-            'status',
-            'tgl_mulai',
-            'deadline'
-        );
+        $laporan = collect();
 
-        if ($request->filled('tgl_mulai')) {
-            $query->whereDate('tgl_mulai', $request->tgl_mulai);
+        // hanya jalan kalau tombol filter ditekan
+        if ($request->filled('tgl_mulai') || $request->filled('deadline')) {
+
+            $query = Proyek::query();
+
+            if ($request->filled('tgl_mulai')) {
+                $query->whereDate('tgl_mulai', '>=', $request->tgl_mulai);
+            }
+
+            if ($request->filled('deadline')) {
+                $query->whereDate('deadline', '<=', $request->deadline);
+            }
+
+            $laporan = $query->get();
         }
-
-        if ($request->filled('deadline')) {
-            $query->whereDate('deadline', $request->deadline);
-        }
-
-        $laporan = $query->get();
 
         return view('admin.laporan.laporan', compact('laporan'));
+    }
+
+    public function tampil_pesan($id)
+    {
+        $teknisi = Teknisi::with('proyek')->findOrFail($id);
+        $proyek = Proyek::where('pic', $teknisi->id)->first();
+        return view('admin.pekerjaan.kirim_pesan', compact('teknisi','proyek'));
+    }
+
+    public function kirim_pesan(Request $request)
+    {
+        $token = "NXA2LKAMfwhw7F9afon7";
+
+        $target = $request->no_hp;   // nomor tujuan
+        // $target = "083809808665";
+        $pesan  = $request->pesan;    // isi pesan
+
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.fonnte.com/send',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => array(
+                'target' => $target,
+                'message' => $pesan,
+                'delay' => '2',
+            ),
+            CURLOPT_HTTPHEADER => array(
+                "Authorization: $token"
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $error_msg = curl_error($curl);
+        curl_close($curl);
+
+        if ($error_msg || $httpCode != 200) {
+            return redirect()->route('ShowPekerjaan')->with('error_kirim_pesan', 'Gagal kirim pesan!');
+        }
+
+        return redirect()->route('ShowPekerjaan')->with('success_kirim_pesan', 'Pesan berhasil dikirim!');
     }
 }

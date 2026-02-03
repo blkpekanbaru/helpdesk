@@ -106,8 +106,8 @@
                     <div class="page-header">
                         <h3 class="page-title">
                             <span class="page-title-icon bg-gradient-primary text-white me-2">
-                                <i class="mdi mdi-file-check-outline"></i>
-                            </span> Laporan
+                                <i class="mdi mdi-plus"></i>
+                            </span> Tambah Proyek
                         </h3>
                         <nav aria-label="breadcrumb">
                             <ul class="breadcrumb">
@@ -118,92 +118,51 @@
                         </nav>
                     </div>
                     <div class="row">
-                        <div class="col-md-6 grid-margin">
-                            <div class="card">
-                                <form action="{{ route('laporan') }}" method="GET">
-                                    <div class="card-body">
-                                        <h4 class="card-title mb-4">Filter Laporan</h4>
-
-                                        <!-- Tanggal -->
-                                        <div class="row">
-                                            <div class="col-md-6 mb-3">
-                                                <label class="form-label">Tanggal Mulai</label>
-                                                <input type="date"
-                                                    name="tgl_mulai"
-                                                    class="form-control"
-                                                    value="{{ request('tgl_mulai') }}">
-                                            </div>
-
-                                            <div class="col-md-6 mb-3">
-                                                <label class="form-label">Deadline</label>
-                                                <input type="date"
-                                                    name="deadline"
-                                                    class="form-control"
-                                                    value="{{ request('deadline') }}">
-                                            </div>
-                                        </div>
-
-                                        <!-- Button -->
-                                        <div class="d-flex align-items-center gap-2 mt-3">
-                                            <button type="submit" class="btn btn-sm btn-primary">
-                                                <i class="mdi mdi-eye-outline"></i> Tampilkan
-                                            </button>
-
-                                            @if(request()->filled('tgl_mulai') || request()->filled('deadline'))
-                                            <a href="{{ route('laporan') }}" class="btn btn-sm btn-outline-secondary">
-                                                Reset
-                                            </a>
-                                            @endif
-                                        </div>
-
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-12 grid-margin stretch-card">
+                        <div class="col-6 grid-margin">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title">Project Status</h4>
+                                    <form action="{{ route('kirim.pesan') }}" method="POST">
+                                        @csrf
 
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered table-striped" id="datatableLaporan">
-                                            <thead class="thead-light">
-                                                <tr>
-                                                    <th>No</th>
-                                                    <th>Nama Proyek</th>
-                                                    <th>Deskripsi</th>
-                                                    <th>Tanggal Mulai</th>
-                                                    <th>Deadline</th>
-                                                    <th>Progres</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($laporan as $i => $row)
-                                                <tr>
-                                                    <td>{{ $i + 1 }}</td>
-                                                    <td>{{ $row->nama_proyek }}</td>
-                                                    <td>{{ $row->deskripsi }}</td>
-                                                    <td>{{ $row->tgl_mulai }}</td>
-                                                    <td>{{ $row->deadline }}</td>
-                                                    <td>
-                                                        @if($row->status == 0)
-                                                        <span class="badge badge-gradient-danger">Belum dikerjakan</span>
-                                                        @elseif($row->status == 1)
-                                                        <span class="badge badge-gradient-warning">Progress</span>
-                                                        @elseif($row->status == 2)
-                                                        <span class="badge badge-gradient-danger">Pending</span>
-                                                        @elseif($row->status == 3)
-                                                        <span class="badge badge-gradient-success">Selesai</span>
-                                                        @endif
-                                                    </td>
-                                                </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
+                                        <div class="modal-body">
+                                            <!-- ID teknisi -->
+                                            <input type="hidden" name="teknisi_id" id="teknisi_id" value="{{$teknisi->id}}">
+
+                                            <div class="mb-3">
+                                                <label class="form-label">Nama Teknisi</label>
+                                                <input type="text" class="form-control" name="nama_teknisi" id="nama_teknisi" value="{{$teknisi->nama_teknisi}}" readonly>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label">No HP</label>
+                                                <input type="text" class="form-control" name="no_hp" id="no_hp" value="{{$teknisi->no_hp}}" readonly>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label class="form-label">Isi Pesan</label>
+                                                <textarea name="pesan" class="form-control" rows="12" required>
+Halo {{$teknisi->nama_teknisi}},
+
+@if ($proyek)
+Anda ditunjuk sebagai PIC untuk pekerjaan:
+- Pekerjaan : {{ $proyek->nama_proyek }}
+- Lokasi    : Kantor BLK
+- Tanggal   : {{ $proyek->tgl_mulai }}
+@endif
+
+Mohon konfirmasi dan ditindaklanjuti. Terima kasih.
+
+                                                </textarea>
+                                            </div>
+                                        </div>
+
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-sm btn-success">
+                                                <i class="mdi mdi-send"></i> Kirim Pesan
+                                            </button>
+                                        </div>
+
+                                    </form>
                                 </div>
                             </div>
                         </div>
@@ -227,41 +186,6 @@
     <!-- plugins:js -->
     @include('layout.script')
     <!-- End custom js for this page -->
-    <script>
-        $(document).ready(function() {
-
-            const tableIds = ['#datatableLaporan'];
-
-            tableIds.forEach(function(id) {
-                $(id).DataTable({
-                    destroy: true,
-                    processing: true,
-                    responsive: true,
-                    pageLength: 10,
-                    lengthMenu: [5, 10, 25, 50],
-                    language: {
-                        search: "Cari:",
-                        lengthMenu: "Tampilkan _MENU_ data",
-                        info: "Menampilkan _START_ - _END_ dari _TOTAL_ data",
-                        infoEmpty: "Data tidak tersedia",
-                        zeroRecords: "Data tidak ditemukan",
-                        emptyTable: "Silakan gunakan filter terlebih dahulu",
-                        paginate: {
-                            first: "Awal",
-                            last: "Akhir",
-                            next: "›",
-                            previous: "‹"
-                        }
-                    },
-                    columnDefs: [{
-                        orderable: false,
-                        targets: -1 // kolom terakhir
-                    }]
-                });
-            });
-
-        });
-    </script>
 </body>
 
 </html>
