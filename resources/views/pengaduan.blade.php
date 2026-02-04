@@ -126,6 +126,17 @@
             });
         </script>
         @endif
+        @if (session('error_pengaduan'))
+        <script>
+            Swal.fire({
+                position: "center",
+                icon: "error",
+                title: "Kesalahan!",
+                text: "Token tidak valid atau lokasi tidak aktif",
+                showConfirmButton: true,
+            });
+        </script>
+        @endif
 
         <!-- Form Card -->
         <div class="rounded-xl border border-slate-200 bg-white shadow-lg">
@@ -143,6 +154,7 @@
             <form id="complaintForm" action="{{route('postPengaduan')}}" class="space-y-6 p-6 sm:p-8" enctype="multipart/form-data" method="post">
                 <!-- Nama Pelapor -->
                 @csrf
+                <input type="hidden" name="lokasi_id" value="{{ $lokasi->id }}">
                 <div>
                     <label for="nama" class="block text-sm font-semibold text-slate-900">
                         Nama Pelapor <span class="text-orange-500">*</span>
@@ -161,15 +173,14 @@
                     <label for="gedung" class="block text-sm font-semibold text-slate-900">
                         Gedung <span class="text-orange-500">*</span>
                     </label>
-                    <select
+                    <input
+                        type="text"
                         id="gedung"
                         name="gedung"
-                        required
-                        class="mt-2 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200">
-                        <option value="">-- Pilih Gedung --</option>
-                        <option value="ws">Workshop Listrik</option>
-                        <option value="utama">Gedung Utama</option>
-                    </select>
+                        value="{{$lokasi->gedung}}"
+                        readonly
+                        class="mt-2 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 placeholder-slate-500 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200" />
+
                 </div>
 
                 <div>
@@ -180,8 +191,8 @@
                         type="text"
                         id="ruangan"
                         name="ruangan"
-                        placeholder="Contoh: Ruang Lab Komputer, Aula Utama"
-                        required
+                        value="{{$lokasi->ruangan}}"
+                        readonly
                         class="mt-2 w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-slate-900 placeholder-slate-500 transition-colors focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-200" />
                 </div>
 

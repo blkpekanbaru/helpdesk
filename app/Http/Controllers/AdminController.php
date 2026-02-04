@@ -2,10 +2,15 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lokasi;
 use App\Models\Pengaduan;
 use App\Models\Proyek;
 use App\Models\Teknisi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class AdminController extends Controller
 {
@@ -66,6 +71,7 @@ class AdminController extends Controller
             'nama_proyek' => 'required|string|max:255',
             'deskripsi'   => 'nullable|string',
             'pic'         => 'required|exists:teknisis,id',
+            'bukti'       => 'nullable|image|mimes:jpg,jpeg,png|max:2048',
             'tgl_mulai'   => 'required|date',
             'deadline'    => 'required|date|after_or_equal:tgl_mulai',
         ]);
@@ -78,9 +84,26 @@ class AdminController extends Controller
             'nama_proyek' => $request->nama_proyek,
             'deskripsi'   => $request->deskripsi,
             'pic'         => $request->pic,
+            'status'      => $request->status,
             'tgl_mulai'   => $request->tgl_mulai,
             'deadline'    => $request->deadline,
         ]);
+
+        if ($request->hasFile('bukti')) {
+
+            // hapus file lama (jika ada)
+            if ($proyek->bukti && Storage::exists('public/bukti/' . $proyek->bukti)) {
+                Storage::delete('public/bukti/' . $proyek->bukti);
+            }
+
+            $file = $request->file('bukti');
+            $namaFile = time() . '_' . $file->getClientOriginalName();
+            $file->storeAs('public/bukti', $namaFile);
+
+            $proyek->update([
+                'bukti' => $namaFile
+            ]);
+        }
 
         // Redirect balik dengan pesan sukses
         return redirect()->route('ShowPekerjaan')->with('success_update_proyek', 'Proyek berhasil diperbarui.');
@@ -121,9 +144,87 @@ class AdminController extends Controller
         return back()->with('success_delete_teknisi', 'Teknisi berhasil dihapus');
     }
 
-    public function pelatihan()
+    public function lokasi()
     {
-        return view('admin.pelatihan.tampil_data');
+        $lokasi = Lokasi::all();
+        return view('admin.lokasi.tampil_data', compact('lokasi'));
+    }
+
+    public function store_lokasi(Request $request)
+    {
+        // 1. Validasi
+        $request->validate([
+            'gedung'  => 'required|string|max:100',
+            'ruangan' => 'required|string|max:100',
+            'status'  => 'required|in:0,1',
+        ]);
+
+        // 2. Generate token QR unik
+        do {
+            $token = Str::random(32);
+        } while (Lokasi::where('qr_token', $token)->exists());
+
+        // 3. Simpan ke database
+        Lokasi::create([
+            'gedung'   => $request->gedung,
+            'ruangan'  => $request->ruangan,
+            'qr_token' => $token,
+            'status'   => $request->status,
+        ]);
+
+        // 4. Redirect
+        return redirect()->back()->with('success', 'Lokasi berhasil ditambahkan & QR Token dibuat.');
+    }
+
+    public function update_lokasi(Request $request, $id)
+    {
+        // 1. Validasi
+        $request->validate([
+            'gedung'  => 'required|string|max:100',
+            'ruangan' => 'unique:lokasis,ruangan,' . $id,
+            'status'  => 'required|in:0,1',
+        ]);
+
+        // 2. Ambil data lokasi
+        $lokasi = Lokasi::findOrFail($id);
+
+        // 3. Update data (QR token tidak diubah)
+        $lokasi->update([
+            'gedung'  => $request->gedung,
+            'ruangan' => $request->ruangan,
+            'status'  => $request->status,
+        ]);
+
+        // 4. Redirect
+        return redirect()
+            ->back()
+            ->with('success_update_lokasi', 'Lokasi berhasil diperbarui.');
+    }
+
+    public function destroy_lokasi($id)
+    {
+        Lokasi::findOrFail($id)->delete();
+
+        return back()->with('success_delete_lokasi', 'Teknisi berhasil dihapus');
+    }
+
+    public function generateQr($id)
+    {
+        $lokasi = Lokasi::findOrFail($id);
+
+        $urlPengaduan = url('/pengaduan?token=' . $lokasi->qr_token);
+
+        $qrUrl = "https://api.qrserver.com/v1/create-qr-code/?size=300x300&data="
+            . urlencode($urlPengaduan);
+
+        $image = Http::get($qrUrl)->body();
+
+        return response($image)
+            ->header('Content-Type', 'image/png')
+            ->header(
+                'Content-Disposition',
+                'attachment; filename="QR-' . $lokasi->gedung . '.png"'
+            );
     }
 
 
@@ -155,7 +256,7 @@ class AdminController extends Controller
     {
         $teknisi = Teknisi::with('proyek')->findOrFail($id);
         $proyek = Proyek::where('pic', $teknisi->id)->first();
-        return view('admin.pekerjaan.kirim_pesan', compact('teknisi','proyek'));
+        return view('admin.pekerjaan.kirim_pesan', compact('teknisi', 'proyek'));
     }
 
     public function kirim_pesan(Request $request)

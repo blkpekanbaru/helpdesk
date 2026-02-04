@@ -2,19 +2,30 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Lokasi;
 use App\Models\Pengaduan;
 use Illuminate\Http\Request;
 
 class IndexController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        return view('pengaduan');
+        $token = $request->query('token'); // token sudah terbaca
+
+        // Cari lokasi yang sesuai token dan status aktif
+        $lokasi = Lokasi::where('qr_token', $token)
+            ->where('status', 1)
+            ->first();
+
+
+        // Jika ditemukan, tampilkan view
+        return view('pengaduan', compact('lokasi'));
     }
 
     public function store_pengaduan(Request $request)
     {
         $validated = $request->validate([
+            'lokasi_id' => 'required|exists:lokasis,id',
             'nama' => 'required|string|max:255',
             'gedung' => 'required|string|max:50',
             'ruangan' => 'nullable|string|max:100',

@@ -10,12 +10,12 @@
         <i class="mdi mdi-briefcase menu-icon"></i>
     </a>
 </li>
-<!-- <li class="nav-item">
-    <a class="nav-link" href="{{route('ShowPelatihan')}}">
-        <span class="menu-title">Agenda Pelatihan</span>
-        <i class="mdi mdi-account-group-outline menu-icon"></i>
+<li class="nav-item">
+    <a class="nav-link" href="{{route('ShowLokasi')}}">
+        <span class="menu-title">Lokasi</span>
+        <i class="mdi mdi-map-marker menu-icon"></i>
     </a>
-</li> -->
+</li>
 <!-- <li class="nav-item">
     <a class="nav-link" href="">
         <span class="menu-title">Kalender</span>

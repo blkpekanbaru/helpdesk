@@ -121,7 +121,7 @@
                         <div class="col-6 grid-margin">
                             <div class="card">
                                 <div class="card-body">
-                                    <form action="{{route('updatePekerjaan',$proyek->id)}}" method="post">
+                                    <form action="{{route('updatePekerjaan',$proyek->id)}}" method="post" enctype="multipart/form-data">
                                         @csrf
                                         @method('PUT')
                                         <div class="mb-3">
@@ -143,6 +143,36 @@
                                                 </option>
                                                 @endforeach
                                             </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="status" class="mb-2">Status</label>
+                                            <select id="status" name="status" required class="form-select">
+                                                <option value="0" {{ $proyek->status == 0 ? 'selected' : '' }}>
+                                                    Belum dikerjakan
+                                                </option>
+                                                <option value="1" {{ $proyek->status == 1 ? 'selected' : '' }}>
+                                                    Progress
+                                                </option>
+                                                <option value="2" {{ $proyek->status == 2 ? 'selected' : '' }}>
+                                                    Pending
+                                                </option>
+                                                <option value="3" {{ $proyek->status == 3 ? 'selected' : '' }}>
+                                                    Selesai
+                                                </option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="bukti" class="mb-2">Bukti</label>
+                                            <input type="file" id="bukti" name="bukti" class="form-control">
+
+                                            @if ($proyek->bukti)
+                                            <small class="text-muted d-block mt-2">
+                                                File saat ini:
+                                                <a href="{{ asset('storage/bukti/'.$proyek->bukti) }}" target="_blank">
+                                                    Lihat bukti
+                                                </a>
+                                            </small>
+                                            @endif
                                         </div>
                                         <div class="mb-3">
                                             <label for="tgl_mulai" class="mb-2">Tanggal Mulai</label>

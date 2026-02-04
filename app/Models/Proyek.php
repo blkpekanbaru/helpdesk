@@ -13,6 +13,8 @@ class Proyek extends Model
         'nama_proyek',
         'deskripsi',
         'pic',
+        'bukti',
+        'status',
         'tgl_mulai',
         'deadline',
     ];

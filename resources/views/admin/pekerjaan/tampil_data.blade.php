@@ -181,6 +181,7 @@
                                                     <th> PIC </th>
                                                     <th> Tanggal Mulai</th>
                                                     <th> Deadline </th>
+                                                    <th> Bukti </th>
                                                     <th> Aksi </th>
                                                 </tr>
                                             </thead>
@@ -200,6 +201,17 @@
                                                     <td>{{ $p->teknisi?->nama_teknisi ?? '-' }}</td>
                                                     <td>{{ $p->tgl_mulai }}</td>
                                                     <td>{{ $p->deadline ?? '-' }}</td>
+                                                    <td>
+                                                        @if ($p->bukti)
+                                                        <a href="{{ asset('storage/bukti/'.$p->bukti) }}"
+                                                            target="_blank"
+                                                            class="btn btn-sm btn-info">
+                                                            <i class="mdi mdi-eye"></i>
+                                                        </a>
+                                                        @else
+                                                        -
+                                                        @endif
+                                                    </td>
                                                     <td class="text-center">
                                                         <!-- Tombol Edit -->
                                                         <a href="{{ route('editPekerjaan', $p->id) }}" class="btn btn-warning btn-sm">
@@ -382,8 +394,9 @@
                                                     <th>Deskripsi</th>
                                                     <th>Tanggal Mulai</th>
                                                     <th>Deadline</th>
-                                                    <th>Status</th>
                                                     <th>PIC</th>
+                                                    <th>Status</th>
+                                                    <th>Bukti</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -394,6 +407,18 @@
                                                     <td>{{ $p->deskripsi }}</td>
                                                     <td>{{ $p->tgl_mulai }}</td>
                                                     <td>{{ $p->deadline }}</td>
+                                                    <td>{{ $p->teknisi?->nama_teknisi ?? '-' }}</td>
+                                                    <td>
+                                                        @if ($p->bukti)
+                                                        <a href="{{ asset('storage/bukti/'.$p->bukti) }}"
+                                                            target="_blank"
+                                                            class="btn btn-sm btn-info">
+                                                            <i class="mdi mdi-eye"></i>
+                                                        </a>
+                                                        @else
+                                                        -
+                                                        @endif
+                                                    </td>
                                                     <td>
                                                         @if($p->status == 2)
                                                         <span class="badge badge-gradient-danger">Pending</span>
@@ -401,7 +426,6 @@
                                                         <span class="badge badge-gradient-success">Selesai</span>
                                                         @endif
                                                     </td>
-                                                    <td>{{ $p->teknisi?->nama_teknisi ?? '-' }}</td>
                                                 </tr>
                                                 @endforeach
                                             </tbody>

@@ -54,8 +54,16 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         ->name('destroyTeknisi');
 
 
-    Route::get('/admin-pelatihan', [AdminController::class, 'pelatihan'])
-        ->name('ShowPelatihan');
+    Route::get('/admin-lokasi', [AdminController::class, 'lokasi'])
+        ->name('ShowLokasi');
+    Route::post('/admin-tambah-lokasi', [AdminController::class, 'store_lokasi'])
+        ->name('StoreLokasi');
+    Route::put('/admin-edit-lokasi/{id}', [AdminController::class, 'update_lokasi'])
+        ->name('UpdateLokasi');
+    Route::delete('/admin-delete-lokasi/{id}', [AdminController::class, 'destroy_lokasi'])
+        ->name('DeleteLokasi');
+    Route::get('/admin/lokasi/{id}/qr', [AdminController::class, 'generateQr'])
+        ->name('GenerateQR');
 
     Route::get('/admin-laporan', [AdminController::class, 'laporan'])
         ->name('Laporan');
@@ -70,5 +78,5 @@ Route::get('/user-dashboard', function () {
 })->name('dashKepala')->middleware('auth');
 
 
-Route::get('/pengaduan', [IndexController::class, 'index']);
+Route::get('/pengaduan', [IndexController::class, 'index'])->name('ShowPengaduan');
 Route::post('/pengaduan', [IndexController::class, 'store_pengaduan'])->name('postPengaduan');
