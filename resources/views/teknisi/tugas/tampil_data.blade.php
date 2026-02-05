@@ -5,7 +5,7 @@
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Helpdesk Admin</title>
+    <title>Helpdesk Teknisi</title>
     <!-- plugins:css -->
     @include('layout.style')
 </head>
@@ -39,18 +39,8 @@
             });
         </script>
         @endif
-        @if (session('success_broadcast'))
-        <script>
-            Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "Berhasil!",
-                text: "Pesan Berhasil diKirim!",
-                showConfirmButton: true,
-            });
-        </script>
-        @endif
         @include('layout.modals_user')
+
         <!-- partial:partials/_navbar.html -->
         <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
             <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">
@@ -101,7 +91,6 @@
                 </button>
             </div>
         </nav>
-
         <!-- partial -->
         <div class="container-fluid page-body-wrapper">
             <!-- partial:partials/_sidebar.html -->
@@ -130,8 +119,8 @@
                     <div class="page-header">
                         <h3 class="page-title">
                             <span class="page-title-icon bg-gradient-primary text-white me-2">
-                                <i class="mdi mdi-home"></i>
-                            </span> Dashboard
+                                <i class="mdi mdi-clipboard-check"></i>
+                            </span> Tugas
                         </h3>
                         <nav aria-label="breadcrumb">
                             <ul class="breadcrumb">
@@ -141,109 +130,46 @@
                             </ul>
                         </nav>
                     </div>
+                    @if (session('success'))
+                    <script>
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Berhasil!",
+                            text: "QR Code Berhasil ditambahkan!",
+                            showConfirmButton: true,
+                        });
+                    </script>
+                    @endif
+                    @if (session('success_update_tugas'))
+                    <script>
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Berhasil!",
+                            text: "Tugas Berhasil diUpdate!",
+                            showConfirmButton: true,
+                        });
+                    </script>
+                    @endif
                     <div class="row">
                         <div class="col-12 grid-margin">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title"><i class="mdi mdi-alert-octagon"></i> Pengaduan</h4>
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered table-striped" id="datatablePengaduan">
-                                            <thead>
-                                                <tr>
-                                                    <th class="text-center"> No </th>
-                                                    <th> Nama Pelapor </th>
-                                                    <th> Lokasi </th>
-                                                    <th> Ruangan </th>
-                                                    <th> Fasilitas </th>
-                                                    <th class="text-center"> Foto </th>
-                                                    <th> Deskripsi </th>
-                                                    <th> Status</th>
-                                                    <th> Bukti</th>
-                                                    <th> Aksi</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($pengaduan as $index => $p)
-                                                <tr>
-                                                    <td class="text-center">{{ $index + 1 }}</td>
-                                                    <td>{{ $p->nama }}</td>
-                                                    <td>
-                                                        @if ($p->gedung == "ws")
-                                                        Workshop
-                                                        @elseif ($p->gedung == "utama")
-                                                        Gedung Utama
-                                                        @endif
-                                                    </td>
-                                                    <td>{{ $p->ruangan }}</td>
-                                                    <td>{{ $p->fasilitas ?? '-' }}</td>
-                                                    <td class="text-center">
-                                                        @if ($p->foto)
-                                                        <a href="{{ asset('storage/uploads/' . $p->foto) }}" target="_blank">
-                                                            <img src="{{ asset('storage/uploads/' . $p->foto) }}"
-                                                                style="width:80px;height:80px;object-fit:cover;border-radius:4px;">
-                                                        </a>
-                                                        @else
-                                                        -
-                                                        @endif
-                                                    </td>
-                                                    <td>{{ $p->deskripsi ?? '-' }}</td>
-                                                    <td>
-                                                        @if ($p->status == 0)
-                                                        <span class="badge badge-gradient-danger">Belum dikerjakan</span>
-                                                        @elseif($p->status == 1)
-                                                        <span class="badge badge-gradient-warning">Progress</span>
-                                                        @elseif($p->status == 2)
-                                                        <span class="badge badge-gradient-danger">Pending</span>
-                                                        @elseif($p->status == 3)
-                                                        <span class="badge badge-gradient-success">Selesai</span>
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        @if ($p->bukti)
-                                                        <a href="{{ asset('storage/bukti/'.$p->bukti) }}"
-                                                            target="_blank"
-                                                            class="btn btn-sm btn-info">
-                                                            <i class="mdi mdi-eye"></i>
-                                                        </a>
-                                                        @else
-                                                        -
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        <form action="{{ route('WABroadcast') }}" method="POST">
-                                                            @csrf
-                                                            <input type="hidden" name="pengaduan_id" value="{{ $p->id }}">
-                                                            <button type="submit" class="btn btn-success btn-sm">
-                                                                <i class="mdi mdi-whatsapp"></i> Kirim Pesan
-                                                            </button>
-                                                        </form>
-
-                                                    </td>
-                                                </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12 grid-margin stretch-card">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="card-title"><i class="mdi mdi-clock-time-eight-outline"></i> Project Berjalan </h4>
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered table-striped" id="datatableProyek">
+                                    <h4 class="card-title"><i class="mdi mdi-playlist-plus"></i> Daftar Proyek</h4>
+                                    <div class="table-responsive mt-3">
+                                        <table class="table table-bordered table-striped" id="datatablePekerjaan">
                                             <thead>
                                                 <tr>
                                                     <th> No </th>
                                                     <th> Nama proyek </th>
                                                     <th> Deskripsi </th>
                                                     <th> Status </th>
-                                                    <th> PIC </th>
                                                     <th> Tanggal Mulai</th>
                                                     <th> Deadline </th>
+                                                    <th> catatan </th>
+                                                    <th> Bukti </th>
+                                                    <th> Aksi </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -257,15 +183,111 @@
                                                         <span class="badge badge-gradient-danger">Belum dikerjakan</span>
                                                         @elseif($p->status == 1)
                                                         <span class="badge badge-gradient-warning">Progress</span>
+                                                        @elseif($p->status == 2)
+                                                        <span class="badge badge-gradient-danger">Pending</span>
+                                                        @elseif($p->status == 3)
+                                                        <span class="badge badge-gradient-success">Selesai</span>
                                                         @endif
                                                     </td>
-                                                    <td>{{ $p->teknisi?->nama_teknisi ?? '-' }}</td>
                                                     <td>{{ $p->tgl_mulai }}</td>
                                                     <td>{{ $p->deadline ?? '-' }}</td>
+                                                    <td>{{ $p->catatan ?? '-' }}</td>
+                                                    <td>
+                                                        @if ($p->bukti)
+                                                        <a href="{{ asset('storage/bukti/'.$p->bukti) }}"
+                                                            target="_blank"
+                                                            class="btn btn-sm btn-info">
+                                                            <i class="mdi mdi-eye"></i>
+                                                        </a>
+                                                        @else
+                                                        -
+                                                        @endif
+                                                    </td>
+                                                    <td class="text-center">
+                                                        <!-- Tombol Edit -->
+                                                        <button
+                                                            class="btn btn-warning btn-sm btn-edit"
+                                                            data-id="{{ $p->id }}"
+                                                            data-status="{{ $p->status }}"
+                                                            data-bukti="{{ $p->bukti }}"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#modalEdit">
+                                                            <i class="mdi mdi-pencil"></i> Edit
+                                                        </button>
+
+                                                    </td>
                                                 </tr>
                                                 @endforeach
                                             </tbody>
                                         </table>
+                                        <div class="modal fade" id="modalEdit" tabindex="-1">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+
+                                                    <form action="{{ route('UpdateTugas', $p->id) }}"
+                                                        method="POST"
+                                                        enctype="multipart/form-data">
+                                                        @csrf
+                                                        @method('PUT')
+
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Update Pekerjaan</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                        </div>
+
+                                                        <div class="modal-body">
+
+                                                            <!-- STATUS -->
+                                                            <div class="form-group">
+                                                                <label for="status">Status</label>
+                                                                <select name="status" id="status" class="form-select" required>
+                                                                    <option value="0" {{ $p->status == 0 ? 'selected' : '' }}>
+                                                                        Belum dikerjakan
+                                                                    </option>
+                                                                    <option value="1" {{ $p->status == 1 ? 'selected' : '' }}>
+                                                                        Progress
+                                                                    </option>
+                                                                    <option value="2" {{ $p->status == 2 ? 'selected' : '' }}>
+                                                                        Pending
+                                                                    </option>
+                                                                    <option value="3" {{ $p->status == 3 ? 'selected' : '' }}>
+                                                                        Selesai
+                                                                    </option>
+                                                                </select>
+                                                            </div>
+                                                            <div class="form-group d-none" id="catatanWrapper">
+                                                                <label for="catatan">Catatan</label>
+                                                                <textarea id="catatan" name="catatan" rows="12" class="form-control"
+                                                                    placeholder="Masukkan alasan pending...">{{$p->catatan}}</textarea>
+                                                            </div>
+
+                                                            <!-- UPLOAD BUKTI -->
+                                                            <div class="form-group">
+                                                                <label for="bukti">Upload Bukti</label>
+                                                                <input type="file" name="bukti" id="bukti" class="form-control">
+
+                                                                @if ($p->bukti)
+                                                                <small class="text-muted">
+                                                                    Bukti saat ini:
+                                                                    <a href="{{ asset('storage/bukti/'.$p->bukti) }}" target="_blank">
+                                                                        Lihat
+                                                                    </a>
+                                                                </small>
+                                                                @endif
+                                                            </div>
+
+                                                        </div>
+
+                                                        <div class="modal-footer">
+                                                            <button type="submit"
+                                                                class="btn btn-primary"><i class="mdi mdi-content-save-check-outline"></i> Simpan</button>
+                                                        </div>
+
+                                                    </form>
+
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -292,7 +314,7 @@
     <script>
         $(document).ready(function() {
 
-            const tableIds = ['#datatablePengaduan', '#datatableProyek'];
+            const tableIds = ['#datatablePekerjaan', '#datatableTeknisi', '#datatableHistory'];
 
             tableIds.forEach(function(id) {
                 $(id).DataTable({
@@ -321,6 +343,62 @@
 
         });
     </script>
+    <script>
+        $('.btn-edit').on('click', function() {
+            let id = $(this).data('id');
+            let status = $(this).data('status');
+            let bukti = $(this).data('bukti');
+
+            // set action form
+            $('#formEdit').attr('action', '/pekerjaan/' + id);
+
+            // set status
+            $('#editStatus').val(status);
+
+            // tampilkan bukti lama jika ada
+            if (bukti) {
+                $('#buktiLama')
+                    .removeClass('d-none')
+                    .find('a')
+                    .attr('href', '/storage/bukti/' + bukti);
+            } else {
+                $('#buktiLama').addClass('d-none');
+            }
+        });
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const statusSelect = document.getElementById('status');
+            const catatanWrapper = document.getElementById('catatanWrapper');
+
+            function toggleCatatan() {
+                if (statusSelect.value === '2') {
+                    catatanWrapper.classList.remove('d-none');
+                } else {
+                    catatanWrapper.classList.add('d-none');
+                    document.getElementById('catatan').value = '';
+                }
+            }
+
+            // saat status berubah
+            statusSelect.addEventListener('change', toggleCatatan);
+
+            // saat modal dibuka (edit)
+            document.querySelectorAll('.btn-edit').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const status = this.dataset.status;
+
+                    statusSelect.value = status;
+                    toggleCatatan();
+                });
+            });
+        });
+    </script>
+
+
+
+
+    <!-- End custom js for this page -->
 </body>
 
 </html>

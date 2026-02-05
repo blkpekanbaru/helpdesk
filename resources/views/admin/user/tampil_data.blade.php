@@ -39,17 +39,6 @@
             });
         </script>
         @endif
-        @if (session('success_broadcast'))
-        <script>
-            Swal.fire({
-                position: "center",
-                icon: "success",
-                title: "Berhasil!",
-                text: "Pesan Berhasil diKirim!",
-                showConfirmButton: true,
-            });
-        </script>
-        @endif
         @include('layout.modals_user')
         <!-- partial:partials/_navbar.html -->
         <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
@@ -101,7 +90,6 @@
                 </button>
             </div>
         </nav>
-
         <!-- partial -->
         <div class="container-fluid page-body-wrapper">
             <!-- partial:partials/_sidebar.html -->
@@ -130,8 +118,8 @@
                     <div class="page-header">
                         <h3 class="page-title">
                             <span class="page-title-icon bg-gradient-primary text-white me-2">
-                                <i class="mdi mdi-home"></i>
-                            </span> Dashboard
+                                <i class="mdi mdi-map-marker"></i>
+                            </span> Lokasi
                         </h3>
                         <nav aria-label="breadcrumb">
                             <ul class="breadcrumb">
@@ -141,127 +129,69 @@
                             </ul>
                         </nav>
                     </div>
+                    @if (session('success'))
+                    <script>
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Berhasil!",
+                            text: "User Berhasil ditambahkan!",
+                            showConfirmButton: true,
+                        });
+                    </script>
+                    @endif
+                    @if (session('success_delete_user'))
+                    <script>
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "Berhasil!",
+                            text: "User Berhasil dihapus!",
+                            showConfirmButton: true,
+                        });
+                    </script>
+                    @endif
                     <div class="row">
                         <div class="col-12 grid-margin">
                             <div class="card">
                                 <div class="card-body">
-                                    <h4 class="card-title"><i class="mdi mdi-alert-octagon"></i> Pengaduan</h4>
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered table-striped" id="datatablePengaduan">
-                                            <thead>
-                                                <tr>
-                                                    <th class="text-center"> No </th>
-                                                    <th> Nama Pelapor </th>
-                                                    <th> Lokasi </th>
-                                                    <th> Ruangan </th>
-                                                    <th> Fasilitas </th>
-                                                    <th class="text-center"> Foto </th>
-                                                    <th> Deskripsi </th>
-                                                    <th> Status</th>
-                                                    <th> Bukti</th>
-                                                    <th> Aksi</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                @foreach ($pengaduan as $index => $p)
-                                                <tr>
-                                                    <td class="text-center">{{ $index + 1 }}</td>
-                                                    <td>{{ $p->nama }}</td>
-                                                    <td>
-                                                        @if ($p->gedung == "ws")
-                                                        Workshop
-                                                        @elseif ($p->gedung == "utama")
-                                                        Gedung Utama
-                                                        @endif
-                                                    </td>
-                                                    <td>{{ $p->ruangan }}</td>
-                                                    <td>{{ $p->fasilitas ?? '-' }}</td>
-                                                    <td class="text-center">
-                                                        @if ($p->foto)
-                                                        <a href="{{ asset('storage/uploads/' . $p->foto) }}" target="_blank">
-                                                            <img src="{{ asset('storage/uploads/' . $p->foto) }}"
-                                                                style="width:80px;height:80px;object-fit:cover;border-radius:4px;">
-                                                        </a>
-                                                        @else
-                                                        -
-                                                        @endif
-                                                    </td>
-                                                    <td>{{ $p->deskripsi ?? '-' }}</td>
-                                                    <td>
-                                                        @if ($p->status == 0)
-                                                        <span class="badge badge-gradient-danger">Belum dikerjakan</span>
-                                                        @elseif($p->status == 1)
-                                                        <span class="badge badge-gradient-warning">Progress</span>
-                                                        @elseif($p->status == 2)
-                                                        <span class="badge badge-gradient-danger">Pending</span>
-                                                        @elseif($p->status == 3)
-                                                        <span class="badge badge-gradient-success">Selesai</span>
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        @if ($p->bukti)
-                                                        <a href="{{ asset('storage/bukti/'.$p->bukti) }}"
-                                                            target="_blank"
-                                                            class="btn btn-sm btn-info">
-                                                            <i class="mdi mdi-eye"></i>
-                                                        </a>
-                                                        @else
-                                                        -
-                                                        @endif
-                                                    </td>
-                                                    <td>
-                                                        <form action="{{ route('WABroadcast') }}" method="POST">
-                                                            @csrf
-                                                            <input type="hidden" name="pengaduan_id" value="{{ $p->id }}">
-                                                            <button type="submit" class="btn btn-success btn-sm">
-                                                                <i class="mdi mdi-whatsapp"></i> Kirim Pesan
-                                                            </button>
-                                                        </form>
-
-                                                    </td>
-                                                </tr>
-                                                @endforeach
-                                            </tbody>
-                                        </table>
+                                    <h4 class="card-title"><i class="mdi mdi-account"></i> Daftar Pengguna</h4>
+                                    <div>
+                                        <a href="#" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#tambahUserModal">
+                                            <i class="mdi mdi-account-multiple-plus-outline"></i> Tambah Pengguna
+                                        </a>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12 grid-margin stretch-card">
-                            <div class="card">
-                                <div class="card-body">
-                                    <h4 class="card-title"><i class="mdi mdi-clock-time-eight-outline"></i> Project Berjalan </h4>
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered table-striped" id="datatableProyek">
+                                    <div class="table-responsive mt-3">
+                                        <table class="table table-bordered table-striped" id="datatablePekerjaan">
                                             <thead>
                                                 <tr>
                                                     <th> No </th>
-                                                    <th> Nama proyek </th>
-                                                    <th> Deskripsi </th>
-                                                    <th> Status </th>
-                                                    <th> PIC </th>
-                                                    <th> Tanggal Mulai</th>
-                                                    <th> Deadline </th>
+                                                    <th> Username </th>
+                                                    <th> Email </th>
+                                                    <th> No Telepon</th>
+                                                    <th> Role </th>
+                                                    <th class="text-center"> Aksi </th>
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                @foreach ($proyek as $index => $p)
+                                                @foreach ($user as $index => $u)
                                                 <tr>
                                                     <td class="text-center">{{ $index + 1 }}</td>
-                                                    <td>{{ $p->nama_proyek }}</td>
-                                                    <td>{{ $p->deskripsi }}</td>
-                                                    <td>
-                                                        @if ($p->status == 0)
-                                                        <span class="badge badge-gradient-danger">Belum dikerjakan</span>
-                                                        @elseif($p->status == 1)
-                                                        <span class="badge badge-gradient-warning">Progress</span>
-                                                        @endif
+                                                    <td>{{ $u->username }}</td>
+                                                    <td>{{ $u->email }}</td>
+                                                    <td>{{ $u->no_hp ?? '-' }}</td>
+                                                    <td>{{ $u->role ?? '-' }}</td>
+                                                    <td class="text-center">
+                                                        <!-- Tombol Hapus -->
+                                                        <form action="{{route('DeleteUser',$u->id)}}" method="POST"
+                                                            class="delete-form d-inline">
+                                                            @csrf
+                                                            @method('DELETE')
+                                                            <button type="submit" class="btn btn-danger btn-sm">
+                                                                <i class="mdi mdi-trash-can"></i> Hapus
+                                                            </button>
+                                                        </form>
                                                     </td>
-                                                    <td>{{ $p->teknisi?->nama_teknisi ?? '-' }}</td>
-                                                    <td>{{ $p->tgl_mulai }}</td>
-                                                    <td>{{ $p->deadline ?? '-' }}</td>
                                                 </tr>
                                                 @endforeach
                                             </tbody>
@@ -271,6 +201,48 @@
                             </div>
                         </div>
                     </div>
+                    <div class="modal fade" id="tambahUserModal" tabindex="-1" aria-labelledby="tambahUserModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <form action="{{ route('StoreUser') }}" method="POST">
+                                    @csrf
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="tambahUserModalLabel">Tambah Pengguna</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label for="username" class="form-label">Username</label>
+                                            <input type="text" name="username" class="form-control" id="username" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">Email</label>
+                                            <input type="email" name="email" class="form-control" id="email" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="no_hp" class="form-label">No Telepon</label>
+                                            <input type="number" name="no_hp" class="form-control" id="no_hp" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="role" class="form-label">Role</label>
+                                            <select name="role" id="role" class="form-select" required>
+                                                <option value="">-- Pilih Role --</option>
+                                                <option value="admin">Admin</option>
+                                                <option value="teknisi">Teknisi</option>
+                                                <!-- Tambah role lain jika ada -->
+                                            </select>
+                                        </div>
+                                        <!-- Password default tidak perlu inputan -->
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                                        <button type="submit" class="btn btn-primary">Simpan</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 <!-- content-wrapper ends -->
                 <!-- partial:partials/_footer.html -->
@@ -292,7 +264,7 @@
     <script>
         $(document).ready(function() {
 
-            const tableIds = ['#datatablePengaduan', '#datatableProyek'];
+            const tableIds = ['#datatablePekerjaan', '#datatableTeknisi', '#datatableHistory'];
 
             tableIds.forEach(function(id) {
                 $(id).DataTable({
@@ -321,6 +293,33 @@
 
         });
     </script>
+
+    <script>
+        // saat tombol delete diklik
+        document.querySelectorAll('.delete-form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault(); // stop submit default
+
+                Swal.fire({
+                    title: "Yakin ingin menghapus?",
+                    text: "Data tidak bisa dikembalikan!",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#d33",
+                    cancelButtonColor: "#3085d6",
+                    confirmButtonText: "Ya, hapus!"
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+
+            });
+        });
+    </script>
+
+
+    <!-- End custom js for this page -->
 </body>
 
 </html>

@@ -28,6 +28,18 @@
 
 <body>
     <div class="container-scroller">
+        @if (session('success_update_password'))
+        <script>
+            Swal.fire({
+                position: "center",
+                icon: "success",
+                title: "Berhasil!",
+                text: "Password Berhasil diUpdate!",
+                showConfirmButton: true,
+            });
+        </script>
+        @endif
+        @include('layout.modals_user')
         <!-- partial:partials/_navbar.html -->
         <nav class="navbar default-layout-navbar col-lg-12 col-12 p-0 fixed-top d-flex flex-row">
             <div class="text-center navbar-brand-wrapper d-flex align-items-center justify-content-center">

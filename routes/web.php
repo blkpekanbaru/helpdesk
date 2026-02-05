@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\IndexController;
+use App\Http\Controllers\TeknisiController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,6 +24,7 @@ use Illuminate\Support\Facades\Route;
 //login
 Route::get('/', [AuthController::class, 'login'])->name('login');
 Route::post('/login', [AuthController::class, 'authentication'])->name('AuthLogin');
+Route::post('/update-password', [AuthController::class, 'update_password'])->name('UpdatePassword');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::middleware(['auth', 'role:admin'])->group(function () {
@@ -30,6 +32,15 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/admin-dashboard', [AdminController::class, 'index'])
         ->name('dashAdmin');
 
+    Route::post('/broadcast-wa', [AdminController::class, 'broadcast_pesan'])
+        ->name('WABroadcast');
+
+    Route::get('/admin-pengguna', [AdminController::class, 'pengguna'])
+        ->name('ShowUser');
+    Route::post('/admin-simpan-pengguna', [AdminController::class, 'store_pengguna'])
+        ->name('StoreUser');
+    Route::delete('/admin-delete-pengguna/{id}', [AdminController::class, 'destroy_pengguna'])
+        ->name('DeleteUser');
     Route::get('/admin-pekerjaan', [AdminController::class, 'pekerjaan'])
         ->name('ShowPekerjaan');
 
@@ -73,10 +84,16 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/kirim-pesan', [AdminController::class, 'kirim_pesan'])->name('kirim.pesan');
 });
 
-Route::get('/user-dashboard', function () {
-    return view('kepala.dashboard');
-})->name('dashKepala')->middleware('auth');
 
+Route::middleware(['auth', 'role:teknisi'])->group(function () {
+    Route::get('/dashboard-teknisi', [TeknisiController::class, 'index'])->name('dashTeknisi');
+
+    Route::get('/tugas-teknisi', [TeknisiController::class, 'tugas'])->name('ShowTugas');
+    Route::put('/tugas-teknisi/{id}', [TeknisiController::class, 'update_tugas'])->name('UpdateTugas');
+
+    Route::get('/pelaporan-teknisi', [TeknisiController::class, 'pelaporan'])->name('ShowPelaporan');
+    Route::put('/pelaporan-teknisi/{id}', [TeknisiController::class, 'update_pelaporan'])->name('UpdatePelaporan');
+});
 
 Route::get('/pengaduan', [IndexController::class, 'index'])->name('ShowPengaduan');
 Route::post('/pengaduan', [IndexController::class, 'store_pengaduan'])->name('postPengaduan');

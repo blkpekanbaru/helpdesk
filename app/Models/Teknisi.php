@@ -19,4 +19,9 @@ class Teknisi extends Model
     {
         return $this->hasMany(Proyek::class, 'pic', 'id');
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

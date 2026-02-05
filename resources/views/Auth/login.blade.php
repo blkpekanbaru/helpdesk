@@ -24,7 +24,17 @@
                                 <h4>Helpdesk BLK</h4>
                                 <h6 class="font-weight-light">Login Untuk Melanjutkan</h6>
                             </div>
-
+                            @if (session('error'))
+                            <script>
+                                Swal.fire({
+                                    position: "center",
+                                    icon: "error",
+                                    title: "Kesalahan!",
+                                    text: "Username atau Password Salah!",
+                                    showConfirmButton: true,
+                                });
+                            </script>
+                            @endif
                             <form class="pt-3" action="{{ route('AuthLogin') }}" method="post">
                                 @csrf
                                 <div class="form-group">

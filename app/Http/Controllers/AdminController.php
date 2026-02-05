@@ -6,6 +6,8 @@ use App\Models\Lokasi;
 use App\Models\Pengaduan;
 use App\Models\Proyek;
 use App\Models\Teknisi;
+use App\Models\User;
+use App\Services\WhatsAppService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -21,6 +23,38 @@ class AdminController extends Controller
             ->whereIn('status', [0, 1])
             ->get();
         return view('admin.dashboard', compact('pengaduan', 'proyek'));
+    }
+
+    public function pengguna()
+    {
+        $user = User::where('role', '!=', 'admin')->get();
+        return view('admin.user.tampil_data', compact('user'));
+    }
+
+    public function store_pengguna(Request $request)
+    {
+        $request->validate([
+            'username' => 'required|string|max:255',
+            'email' => 'required|email|unique:users,email',
+            'role' => 'required|string',
+        ]);
+
+        User::create([
+            'username' => $request->username,
+            'email' => $request->email,
+            'role' => $request->role,
+            'no_hp' => $request->no_hp,
+            'password' => bcrypt('123456'), // Password default
+        ]);
+
+        return redirect()->back()->with('success', 'User berhasil ditambahkan');
+    }
+
+    public function destroy_pengguna($id)
+    {
+        User::findOrFail($id)->delete();
+
+        return back()->with('success_delete_user', 'User berhasil dihapus');
     }
 
     public function pekerjaan()
@@ -293,5 +327,37 @@ class AdminController extends Controller
         }
 
         return redirect()->route('ShowPekerjaan')->with('success_kirim_pesan', 'Pesan berhasil dikirim!');
+    }
+
+    public function broadcast_pesan(Request $request)
+    {
+        $request->validate([
+            'pengaduan_id' => 'required|exists:pengaduans,id',
+        ]);
+
+        // 🔑 ambil proyek
+        $pengaduan = Pengaduan::findOrFail($request->pengaduan_id);
+
+        $users = User::whereNotNull('no_hp')->get();
+
+        foreach ($users as $user) {
+            $noHp = preg_replace('/^0/', '62', $user->no_hp);
+
+            $pesan =
+                "Halo " . $user->username . ", 👋\n\n"
+                . "Anda mendapat *laporan kerusakan baru*.\n\n"
+                . "📌 Proyek : " . $pengaduan->nama . "\n"
+                . "📍 Gedung: " . $pengaduan->gedung . "\n"
+                . "📍 Ruangan: " . $pengaduan->ruangan . "\n"
+                . "📝 Detail : " . $pengaduan->deskripsi . "\n\n"
+                . "Mohon segera ditindaklanjuti.\n"
+                . "Terima kasih 🙏";
+
+            WhatsAppService::send($noHp, $pesan);
+
+            sleep(1);
+        }
+
+        return back()->with('success_broadcast', 'Broadcast WhatsApp berhasil dikirim');
     }
 }
