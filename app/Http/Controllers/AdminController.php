@@ -64,10 +64,11 @@ class AdminController extends Controller
             ->whereIn('status', [0, 1])
             ->get();
 
+        $user = User::where('role', '!=', 'admin')->get();
         $history = Proyek::with('teknisi')
             ->whereNotIn('status', [0, 1])
             ->get();
-        return view('admin.pekerjaan.tampil_data', compact('teknisi', 'proyek', 'history'));
+        return view('admin.pekerjaan.tampil_data', compact('teknisi', 'proyek', 'history','user'));
     }
 
     public function tambahPekerjaan()
@@ -153,12 +154,16 @@ class AdminController extends Controller
     public function storeTeknisi(Request $request)
     {
         $request->validate([
-            'nama_teknisi' => 'required',
             'no_hp' => 'required',
             'tugas' => 'nullable'
         ]);
 
-        Teknisi::create($request->all());
+
+        Teknisi::create([
+            'no_hp' => $request->no_hp,
+            'tugas' => $request->tugas,
+            'user_id'=> $request->user_id
+        ]);
 
         return back()->with('success_teknisi', 'Teknisi berhasil ditambahkan');
     }
@@ -346,7 +351,7 @@ class AdminController extends Controller
             $pesan =
                 "Halo " . $user->username . ", 👋\n\n"
                 . "Anda mendapat *laporan kerusakan baru*.\n\n"
-                . "📌 Proyek : " . $pengaduan->nama . "\n"
+                . "📌 Fasilitas : " . $pengaduan->fasilitas . "\n"
                 . "📍 Gedung: " . $pengaduan->gedung . "\n"
                 . "📍 Ruangan: " . $pengaduan->ruangan . "\n"
                 . "📝 Detail : " . $pengaduan->deskripsi . "\n\n"

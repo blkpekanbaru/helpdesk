@@ -149,7 +149,7 @@
                                                 <option value="">-- Pilih PIC --</option>
                                                 @foreach ($teknisi as $t)
                                                 <option value="{{ $t->id }}">
-                                                    {{ $t->nama_teknisi }}
+                                                    {{ $t->user->username }}
                                                 </option>
                                                 @endforeach
                                             </select>

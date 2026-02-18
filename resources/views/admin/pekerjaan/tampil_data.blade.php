@@ -209,7 +209,7 @@
                                                         <span class="badge badge-gradient-warning">Progress</span>
                                                         @endif
                                                     </td>
-                                                    <td>{{ $p->teknisi?->nama_teknisi ?? '-' }}</td>
+                                                    <td>{{ $p->teknisi->user->username ?? '-' }}</td>
                                                     <td>{{ $p->tgl_mulai }}</td>
                                                     <td>{{ $p->deadline ?? '-' }}</td>
                                                     <td>
@@ -230,9 +230,14 @@
                                                         </a>
 
 
-                                                        <a href="{{ route('TampilPesan', $p->teknisi->id) }}" class="btn btn-success btn-sm">
+                                                        @if($p->teknisi)
+                                                        <a href="{{ route('TampilPesan', $p->teknisi->id) }}"
+                                                            class="btn btn-success btn-sm">
                                                             <i class="mdi mdi-chat"></i> Pesan
                                                         </a>
+                                                        @else
+                                                        <span class="text-danger">Belum ada teknisi</span>
+                                                        @endif
 
                                                         <!-- Tombol Hapus -->
                                                         <form action="{{ route('destroyPekerjaan', $p->id) }}" method="POST"
@@ -317,7 +322,7 @@
                                                 @foreach ($teknisi as $index => $t)
                                                 <tr>
                                                     <td class="text-center">{{ $index + 1 }}</td>
-                                                    <td>{{ $t->nama_teknisi }}</td>
+                                                    <td>{{ $t->user->username }}</td>
                                                     <td>{{ $t->no_hp }}</td>
                                                     <td>{{ $t->tugas ?? '-' }}</td>
                                                     <td class="text-center">
@@ -367,7 +372,14 @@
 
                                             <div class="mb-3">
                                                 <label class="form-label">Nama Teknisi</label>
-                                                <input type="text" name="nama_teknisi" id="nama_teknisi" class="form-control" required>
+                                                <select id="user_id" name="user_id" required class="form-select">
+                                                    <option value="">-- Pilih Teknisi --</option>
+                                                    @foreach ($user as $u)
+                                                    <option value="{{ $u->id }}">
+                                                        {{ $u->username }}
+                                                    </option>
+                                                    @endforeach
+                                                </select>
                                             </div>
 
                                             <div class="mb-3">

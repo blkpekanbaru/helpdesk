@@ -151,7 +151,7 @@
                                                 @foreach ($teknisi as $t)
                                                 <option value="{{ $t->id }}"
                                                     {{ $proyek->pic == $t->id ? 'selected' : '' }}>
-                                                    {{ $t->nama_teknisi }}
+                                                    {{ $t->user->username }}
                                                 </option>
                                                 @endforeach
                                             </select>

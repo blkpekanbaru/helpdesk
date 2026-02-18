@@ -38,7 +38,7 @@
 </li>
 
 <li class="nav-item">
-    <a class="nav-link" href="{{ route('ShowTugas') }}">
+    <a class="nav-link" href="/teknisi-tugas">
         <span class="menu-title">Tugas</span>
         <i class="mdi mdi-clipboard-check menu-icon"></i>
     </a>

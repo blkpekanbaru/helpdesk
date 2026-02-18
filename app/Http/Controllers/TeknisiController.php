@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Pengaduan;
 use App\Models\Proyek;
 use App\Models\Teknisi;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
@@ -29,9 +30,22 @@ class TeknisiController extends Controller
         ));
     }
 
+    // public function tugas()
+    // {
+    //     $teknisi = Teknisi::where('id', auth()->id())->first();
+
+    //     if (!$teknisi) {
+    //         return redirect()->back()->with('error', 'Anda bukan teknisi');
+    //     }
+
+    //     $proyek = Proyek::where('pic', $teknisi->id)->get();
+
+    //     return view('teknisi.tugas.tampil_data', compact('proyek'));
+    // }
+
     public function tugas()
     {
-        $teknisi = Teknisi::where('id', auth()->id())->first();
+        $teknisi = auth()->user()->teknisi;
 
         if (!$teknisi) {
             return redirect()->back()->with('error', 'Anda bukan teknisi');

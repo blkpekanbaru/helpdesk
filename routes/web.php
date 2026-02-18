@@ -88,7 +88,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 Route::middleware(['auth', 'role:teknisi'])->group(function () {
     Route::get('/dashboard-teknisi', [TeknisiController::class, 'index'])->name('dashTeknisi');
 
-    Route::get('/tugas-teknisi', [TeknisiController::class, 'tugas'])->name('ShowTugas');
+    Route::get('/teknisi-tugas', [TeknisiController::class, 'tugas'])->name('tugasTeknisi');
     Route::put('/tugas-teknisi/{id}', [TeknisiController::class, 'update_tugas'])->name('UpdateTugas');
 
     Route::get('/pelaporan-teknisi', [TeknisiController::class, 'pelaporan'])->name('ShowPelaporan');
