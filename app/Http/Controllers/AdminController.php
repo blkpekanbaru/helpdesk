@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class AdminController extends Controller
@@ -289,6 +290,17 @@ class AdminController extends Controller
         }
 
         return view('admin.laporan.laporan', compact('laporan'));
+    }
+
+    public function downloadPdf($id)
+    {
+        $proyek = Proyek::findOrFail($id);
+        // hanya boleh download jika status selesai
+        if ($proyek->status != 3) {
+            abort(403, 'Proyek belum selesai, tidak bisa download PDF.');
+        }
+        $pdf = PDF::loadView('admin.laporan.pdf', compact('proyek'));
+        return $pdf->download('laporan-proyek-' . $proyek->id . '.pdf');
     }
 
     public function tampil_pesan($id)
