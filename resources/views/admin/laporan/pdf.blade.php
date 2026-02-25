@@ -154,8 +154,8 @@
                 <div class="header-title">DIREKTORAT JENDERAL</div>
                 <div class="header-title">PEMBINAAN PELATIHAN VOKASI DAN PRODUKTIVITAS</div>
                 <div class="header-title">BALAI PELATIHAN VOKASI DAN PRODUKTIVITAS</div>
-                <div class="sub-title">Alamat kantor / jalan / kota, kode pos, telepon/faks</div>
-                <div class="small">Website: xxxxx • Email: xxxxx • Laman: xxxxx</div>
+                <div class="sub-title">Wonorejo, Marpoyan Damai, Pekanbaru City, Riau 28122, Indonesia</div>
+                <div class="small">Website: https://bpvppekanbaru.kemnaker.go.id • Email: satpelblkpekanbaru@gmail.com • Laman: http://kemnaker.go.id</div>
             </td>
             <td style="width:70px;"></td>
         </tr>
@@ -173,17 +173,17 @@
         <tr class="field-row">
             <td style="width:170px;" class="bold">NAMA PEMOHON</td>
             <td style="width:10px;">:</td>
-            <td><span class="dots-lg">{{ $proyek->nama_pemohon ?? '' }}</span></td>
+            <td>{{ $pengaduan->nama ?? '' }}</td>
         </tr>
         <tr class="field-row">
             <td class="bold">BAGIAN/BIDANG/KEJURUAN</td>
             <td>:</td>
-            <td><span class="dots-lg">{{ $proyek->bagian ?? '' }}</span></td>
+            <td>{{ $pengaduan->ruangan ?? '' }}</td>
         </tr>
         <tr class="field-row">
             <td class="bold">OBJEK PEMELIHARAAN</td>
             <td>:</td>
-            <td><span class="dots-lg">{{ $proyek->objek ?? $proyek->nama_proyek }}</span></td>
+            <td>{{ $pengaduan->fasilitas ?? '' }}</td>
         </tr>
     </table>
 
@@ -195,7 +195,7 @@
         <tr>
             <td>
                 <div class="box">
-                    {{ $proyek->deskripsi ?? '' }}
+                    {{ $pengaduan->deskripsi ?? '' }}
                 </div>
             </td>
         </tr>
@@ -215,16 +215,16 @@
         </tr>
         <tr>
             <td>
-                <div>Nama : <span class="dots-sm">{{ $ttd_teknisi_nama ?? '' }}</span></div>
-                <div>NIP&nbsp;&nbsp;&nbsp; : <span class="dots-sm">{{ $ttd_teknisi_nip ?? '' }}</span></div>
+                <div>Nama : {{ $ttd_teknisi_nama ?? '' }}</div>
+                <div>NIP&nbsp;&nbsp;&nbsp; : {{ $ttd_teknisi_nip ?? '' }}</div>
             </td>
             <td>
-                <div>Nama : <span class="dots-sm">{{ $ttd_kasubbag_nama ?? '' }}</span></div>
-                <div>NIP&nbsp;&nbsp;&nbsp; : <span class="dots-sm">{{ $ttd_kasubbag_nip ?? '' }}</span></div>
+                <div>Nama : Benny Nurzikri Rahim, S.T.,M.si</div>
+                <div>NIP&nbsp;&nbsp;&nbsp; : 198602142018011001</div>
             </td>
             <td>
-                <div>Nama : <span class="dots-sm">{{ $ttd_ppk_nama ?? '' }}</span></div>
-                <div>NIP&nbsp;&nbsp;&nbsp; : <span class="dots-sm">{{ $ttd_ppk_nip ?? '' }}</span></div>
+                <div>Nama : Benny Nurzikri Rahim, S.T.,M.si</div>
+                <div>NIP&nbsp;&nbsp;&nbsp; : 198602142018011001</div>
             </td>
         </tr>
     </table>
@@ -241,8 +241,8 @@
                 <div class="cb-row"><span class="checkbox"></span>Diperbaiki sendiri</div>
                 <div class="cb-row"><span class="checkbox"></span>Diperbaiki melalui penggantian sparepart</div>
                 <div class="cb-row"><span class="checkbox"></span>Diperbaiki melalui vendor / pihak ke 3</div>
-                <div class="cb-row">No. Hp Vendor : <span class="dots-sm">{{ $vendor_hp ?? '' }}</span></div>
-                <div class="cb-row">Nama Vendor : <span class="dots-sm">{{ $vendor_nama ?? '' }}</span></div>
+                <div class="cb-row">No. Hp Vendor : {{ $vendor_hp ?? '' }}</div>
+                <div class="cb-row">Nama Vendor : {{ $vendor_nama ?? '' }}</div>
                 <div class="cb-row"><span class="checkbox"></span>Tidak dapat diperbaiki / Rusak berat</div>
             </td>
             <td>
@@ -271,7 +271,7 @@
                     </tr>
                     <tr>
                         <td style="width:35%;">Tgl. Lapor</td>
-                        <td>{{ $tgl_lapor ?? ($proyek->tgl_mulai ?? '') }}</td>
+                        <td>{{ $pengaduan->created_at ?? '' }}</td>
                     </tr>
                     <tr>
                         <td>Tgl. Proses</td>
@@ -279,7 +279,7 @@
                     </tr>
                     <tr>
                         <td>Tgl. Selesai</td>
-                        <td>{{ $proyek->deadline ?? '' }}</td>
+                        <td></td>
                     </tr>
                     <tr>
                         <th class="center" colspan="2">Kode MAK</th>
@@ -292,7 +292,7 @@
                     </tr>
                     <tr>
                         <td style="width:35%;">Rp.</td>
-                        <td>{{ $perkiraan_biaya ?? '' }}</td>
+                        <td></td>
                     </tr>
                 </table>
             </td>

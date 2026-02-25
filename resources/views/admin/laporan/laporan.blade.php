@@ -190,7 +190,7 @@
                                                     <th>Tanggal Mulai</th>
                                                     <th>Deadline</th>
                                                     <th>Progres</th>
-                                                    <th>Aksi</th> {{-- kolom baru --}}
+                                                    
                                                 </tr>
                                             </thead>
 
@@ -205,28 +205,17 @@
 
                                                     <td>
                                                         @if($row->status == 0)
-                                                            <span class="badge badge-gradient-danger">Belum dikerjakan</span>
+                                                        <span class="badge badge-gradient-danger">Belum dikerjakan</span>
                                                         @elseif($row->status == 1)
-                                                            <span class="badge badge-gradient-warning">Progress</span>
+                                                        <span class="badge badge-gradient-warning">Progress</span>
                                                         @elseif($row->status == 2)
-                                                            <span class="badge badge-gradient-danger">Pending</span>
+                                                        <span class="badge badge-gradient-danger">Pending</span>
                                                         @elseif($row->status == 3)
-                                                            <span class="badge badge-gradient-success">Selesai</span>
+                                                        <span class="badge badge-gradient-success">Selesai</span>
                                                         @endif
                                                     </td>
 
-                                                    <td>
-                                                        @if($row->status == 3)
-                                                            <a href="{{ route('laporan.download', $row->id) }}" class="btn btn-sm btn-primary">
-                                                            Download PDF
-                                                        </a>
-
-                                                        @else
-                                                            <button class="btn btn-sm btn-secondary" disabled>
-                                                                Download PDF
-                                                            </button>
-                                                        @endif
-                                                    </td>
+                                                    
                                                 </tr>
                                                 @endforeach
                                             </tbody>

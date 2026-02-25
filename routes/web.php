@@ -85,6 +85,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/laporan', [AdminController::class, 'laporan'])->name('laporan');
     Route::get('/tampil-pesan/{id}', [AdminController::class, 'tampil_pesan'])->name('TampilPesan');
     Route::post('/kirim-pesan', [AdminController::class, 'kirim_pesan'])->name('kirim.pesan');
+    Route::get('/laporan/{id}/download', [AdminController::class, 'downloadPdf'])->name('laporan.download');
 });
 
 

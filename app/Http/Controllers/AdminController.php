@@ -69,7 +69,7 @@ class AdminController extends Controller
         $history = Proyek::with('teknisi')
             ->whereNotIn('status', [0, 1])
             ->get();
-        return view('admin.pekerjaan.tampil_data', compact('teknisi', 'proyek', 'history','user'));
+        return view('admin.pekerjaan.tampil_data', compact('teknisi', 'proyek', 'history', 'user'));
     }
 
     public function tambahPekerjaan()
@@ -163,7 +163,7 @@ class AdminController extends Controller
         Teknisi::create([
             'no_hp' => $request->no_hp,
             'tugas' => $request->tugas,
-            'user_id'=> $request->user_id
+            'user_id' => $request->user_id
         ]);
 
         return back()->with('success_teknisi', 'Teknisi berhasil ditambahkan');
@@ -294,14 +294,15 @@ class AdminController extends Controller
 
     public function downloadPdf($id)
     {
-        $proyek = Proyek::findOrFail($id);
+        $pengaduan = Pengaduan::findOrFail($id);
         // hanya boleh download jika status selesai
-        if ($proyek->status != 3) {
-            abort(403, 'Proyek belum selesai, tidak bisa download PDF.');
-        }
-        $pdf = PDF::loadView('admin.laporan.pdf', compact('proyek'));
-        return $pdf->download('laporan-proyek-' . $proyek->id . '.pdf');
+        // if ($pengaduan->status != 3) {
+        //     abort(403, 'Proyek belum selesai, tidak bisa download PDF.');
+        // }
+        $pdf = PDF::loadView('admin.laporan.pdf', compact('pengaduan'));
+        return $pdf->download('laporan-proyek-' . $pengaduan->id . '.pdf');
     }
+
 
     public function tampil_pesan($id)
     {

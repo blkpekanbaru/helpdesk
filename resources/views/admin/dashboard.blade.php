@@ -217,6 +217,13 @@
                                                                 <i class="mdi mdi-whatsapp"></i> Kirim Pesan
                                                             </button>
                                                         </form>
+                                                        @if($p->status == 0)
+                                                        <div class="mt-2">
+                                                            <a href="{{ route('laporan.download', $p->id) }}" class="btn btn-sm btn-info">
+                                                                <i class="mdi mdi-download"></i> Unduh 
+                                                            </a>
+                                                        </div>
+                                                        @endif
 
                                                     </td>
                                                 </tr>
